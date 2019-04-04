@@ -1,6 +1,7 @@
 #######This is a demo R shiny app based on a species distribution model for the parasitic weed Striga hermonthica.
-#######The two dependent files (preds.all.tif and curated_occ_ESB_7.26.18.csv) can be downloaded from my github page: 
-#######Last update: 4.2.19 by Emily Bellis
+#######One of the dependent files (curated_occ_ESB_7.26.18.csv) can be downloaded from my github page
+#######The other two (preds.all.tif and preds.sorg.tif) will be available on Dryad on publication
+#######Last update: 4.4.19 by Emily Bellis
 
 #######to deploy in test mode from R:
 #library(shiny)
