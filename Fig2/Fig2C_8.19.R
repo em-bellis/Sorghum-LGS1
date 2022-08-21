@@ -1,4 +1,3 @@
-###distribution model fig
 library(raster)
 library(rgdal)
 library(ggplot2)
@@ -7,17 +6,21 @@ data(worldMapEnv)
 library(gridExtra)
 library(dismo)
 
-all<- raster('/Users/emilywork/Desktop/ENM/distModel7.30/preds.all.tif')
+##########
+# Fig. 2C
+##########
 
-del9067 <- read.table('/Users/emilywork/Desktop/LGS1/MSfigs/createDistmaps/9506.coords.v2.txt', header=F)
+all<- raster('/Users/emilywork/Desktop/STRIGA/ENM/distModel7.30/preds.all.tif') # available from https://scholarsphere.psu.edu/resources/484b3bb5-22bf-4fe1-a93f-b73569b31151
+
+del9067 <- read.table('9506.coords.v2.txt', header=F)
 del9067$V4 <- "lgs1-3"
-del9519 <- read.table('/Users/emilywork/Desktop/LGS1/MSfigs/createDistmaps/9519.coords.v2.txt', header=F)
+del9519 <- read.table('9519.coords.v2.txt', header=F)
 del9519$V4 <- "lgs1-2"
 
 #position 69985710
-fs.a <- read.table('/Users/emilywork/Desktop/LGS1/MSfigs/createDistmaps/FS.pres.coords.txt', header=F)
+fs.a <- read.table('FS.pres.coords.txt', header=F)
 fs.a$V4 <- "Frameshift"
-fs.t <- read.table('/Users/emilywork/Desktop/LGS1/MSfigs/createDistmaps/FS.abs.coords.txt', header=F)
+fs.t <- read.table('FS.abs.coords.txt', header=F)
 fs.t$V4 <- "Intact"
 
 lgs <- rbind.data.frame(del9067, del9519)
@@ -26,9 +29,9 @@ lgs$V4 <- as.factor(lgs$V4)
 fs <- rbind.data.frame(fs.a, fs.t)
 fs <- subset(fs, V2 != "NA")
 
-#map
+# map
 pdf('/Users/emilywork/Desktop/LGS1/LGS1_revision_8.19/Fig2C.pdf')
-map(database="world", xlim=c(-20,90),ylim=c(-35,40))
+maps::map(database="world", xlim=c(-20,90),ylim=c(-35,40))
 box()
 points(fs.t$V3, fs.t$V2, col=rgb(190, 190, 190, max = 255, alpha = 140), pch=19, cex=0.5)
 points(fs.a$V3, fs.a$V2, col=rgb(117,112,179, max=255, alpha=140), pch=19, cex=0.75) #purple; fs
@@ -37,6 +40,9 @@ points(del9519$V3,del9519$V2,col=rgb(27,158,119, max=255, alpha=140), pch=19, ce
 scalebar(2000, xy = c(-15,-30), type = "bar", divs = 2, lonlat = TRUE)
 dev.off()
 
+##########
+# Fig. 2D
+##########
 ##extract probability of striga occurrence at location of each landrace
 lgs.points <- cbind.data.frame(lgs$V3, lgs$V2)
 fs.points <- cbind.data.frame(fs$V3, fs$V2)
@@ -48,7 +54,7 @@ lgs$all.prob[is.na(lgs$all.prob)] <- 0
 fs$all.prob[is.na(fs$all.prob)] <- 0
 
 #apply 200km mask
-shgeo <- read.csv('/Users/emilywork/Desktop/ENM/Final_occurrence_data/curated_occ_ESB_7.26.18.csv', header=T,stringsAsFactors=F) ##1116 occurrences
+shgeo <- read.csv('../Fig1/curated_occ_ESB_7.26.18.csv', header=T,stringsAsFactors=F) ##1116 occurrences
 coordinates(shgeo) <- ~lon+lat
 coordinates(lgs.points) <- ~lon+lat
 coordinates(fs.points) <- ~lon+lat
@@ -86,7 +92,7 @@ within200 <- as.data.frame(within200)
 notwithin200 <- as.data.frame(notwithin200)
 lgs.replaced <- rbind.data.frame(within200, notwithin200)
 
-#####probability density functions
+#probability density functions
 s3.points <- rbind(fs.replaced, lgs.replaced)
 s3.points <- subset(s3.points, V2 != "NA")
 coordinates(s3.points) <- ~V3 + V2
